@@ -1,44 +1,48 @@
 <template>
   <el-container class="contain-view">
 
-    <el-header style="text-align: right; font-size: 12px">
-      <span class="header_bar">Project</span>
-      <span class="header_bar">Backtest</span>
-      <span class="header_bar">Support</span>
+    <el-header style="text-align: left; font-size: 28px; height: 90px">
+      <span class="header-bar">Backtest Laboratory</span>
     </el-header>
 
     <el-main>
-      <router-view></router-view>
+      <backtest-result></backtest-result>
     </el-main>
   </el-container>
 </template>
 
 <script>
+import BacktestResult from "./BacktestResult";
 
 export default {
   name: "ContainView",
-  components: {},
+  components: {BacktestResult},
 }
 </script>
 
 <style scoped>
+
+.el-container {
+  height: 100%;
+}
+
 .el-header {
   /*background-color: #B3C0D1;*/
   box-shadow: 0 5px 10px #eceaea;
-  line-height: 60px;
+  line-height: 90px;
 }
 
-.header_bar {
-  margin: 0 10px;
-  color: #6c6a6a;
+/deep/ .el-main {
+  overflow: visible;
+  padding: 0;
 }
 
-.text-view {
-  padding: 20px 20px 20px 30px;
-  line-height: 180%;
-  margin-bottom: 50px;
-  font-family: "Georgia";
+.header-bar {
+  margin: 0 25px;
+  font-weight: bold;
 }
+
+
 
 
 </style>

@@ -14,35 +14,24 @@
       user's risk preference and demonstrate the effect of the strategy on historical data through
       backtesting. </p>
 
-
-    <div id="progress">
-      <h2>Progress</h2>
-      <el-steps direction="vertical" :active="5" style="margin-top: 40px">
-        <el-step title="Convertible bond market analysis"></el-step>
-        <el-step title="Analysis of the connection between the convertible bond market and the stock market"></el-step>
-        <el-step title="Analysis of convertible bond terms"></el-step>
-        <el-step title="Backtesting system and profit statistics system development" description=""></el-step>
-        <el-step title="Factors mining"></el-step>
-        <el-step title="Traditional multi-factor model"></el-step>
-        <el-step title="Machine learning and deep learning models"></el-step>
-        <el-step title="Webpage design"></el-step>
-      </el-steps>
-    </div>
+    <el-image
+      style="width: 100px; height: 100px"
+      :src="url"></el-image>
   </div>
 
 </template>
 
 <script>
 export default {
-  name: "ProjectInformation"
+  name: "ProjectInformation",
+  data() {
+    return {
+      url: '../'
+    }
+  }
 }
 </script>
 
 <style scoped>
 
-
-#progress {
-  height: 500px;
-  margin: 50px 0 ;
-}
 </style>

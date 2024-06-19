@@ -11,4 +11,16 @@ export default {
 </script>
 
 <style>
+#app {
+  position: relative;
+}
+
+html {
+  height: 100%;
+  overflow-y: hidden
+}
+
+body {
+  height: 100%;
+}
 </style>

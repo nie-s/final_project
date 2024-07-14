@@ -4,7 +4,6 @@
       <side-bar></side-bar>
       <contain-view></contain-view>
     </el-container>
-
   </div>
 </template>
 
@@ -36,5 +35,6 @@ html, body, #app, .el-container {
   height: 100%;
   width: 100%;
 }
+
 
 </style>

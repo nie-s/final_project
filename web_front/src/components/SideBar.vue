@@ -1,5 +1,5 @@
 <template>
-  <el-aside width="400px">
+  <el-aside width="450px">
     <div class="side-header">
       <i class="el-icon-sunrise"></i> Trading
       <el-divider></el-divider>
@@ -7,18 +7,20 @@
 
     <div class="factor">
       <div class="factor-header">Strategy</div>
-      <el-radio-group v-model="radio" text-color="#e2eeee">
-        <el-radio :label="1">Linear Strategy A + B</el-radio>
-        <el-radio :label="2">Linear Strategy C + D</el-radio>
-        <el-radio :label="3">Random Forest</el-radio>
-        <el-radio :label="4">XGBoost</el-radio>
+      <el-radio-group v-model="radio" text-color="#e2eeee" @change="handleClick">
+        <el-radio :label="1">Linear Strategy 1</el-radio>
+        <el-radio :label="2">Linear Strategy 2</el-radio>
+        <el-radio :label="3">Linear Strategy 3</el-radio>
+        <el-radio :label="4">Random Forest</el-radio>
+        <el-radio :label="5">XGBoost</el-radio>
+        <el-radio :label="6">Transformer</el-radio>
       </el-radio-group>
     </div>
 
     <div class="factor">
       <div class="factor-header">Preference</div>
       <div class="preference-content">
-        <div class="preference-header"> Industry</div>
+        <span class="preference-header"> Industry</span>
         <el-select v-model="industry_value" placeholder="Please select">
           <el-option
             v-for="item in industries"
@@ -30,8 +32,8 @@
       </div>
 
       <div class="preference-content">
-        <div class="preference-header"> History Volatility</div>
-        <el-select v-model="volatility_value" placeholder="Please select">
+        <span class="preference-header"> History Volatility</span>
+        <el-select v-model="volatility_value" placeholder="Please select" :disabled="radio===6">
           <el-option
             v-for="item in volatility"
             :key="item.value"
@@ -43,7 +45,7 @@
 
 
       <div class="preference-content">
-        <div class="preference-header"> Conversion Price</div>
+        <span class="preference-header"> Conversion Price</span>
         <el-select v-model="price_value" placeholder="Please select">
           <el-option
             v-for="item in price"
@@ -54,8 +56,22 @@
         </el-select>
       </div>
 
-      <div style="text-align:center;margin-top: 40px">
-        <el-button type="primary"><i class="el-icon-caret-right"></i> Run Backtest</el-button>
+
+      <div class="preference-content">
+        <span class="preference-header"> Bond Price</span>
+        <el-select v-model="bond_value" placeholder="Please select">
+          <el-option
+            v-for="item in bond"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </div>
+
+
+      <div style="text-align:center;margin-top: 20px">
+        <el-button type="primary" @click="run"><i class="el-icon-caret-right"></i> Run Backtest</el-button>
       </div>
 
 
@@ -64,79 +80,117 @@
 </template>
 
 <script>
+
+
 export default {
   name: "SideBar",
   methods: {
     handleSelect(path) {
       this.$router.push(path)
     },
+    handleClick() {
+      if (this.radio === 6) {
+        this.volatility_value = 'ALL'
+        console.log(this.volatility_value)
+      }
+    },
+    anyEmpty() {
+      if (this.radio === 6) {
+        return this.industry_value === '' || this.price_value === '' || this.bond_value === ''
+      } else {
+        return this.industry_value === '' || this.volatility_value === '' || this.price_value === '' || this.bond_value === ''
+      }
+    },
+    run() {
+      if (this.anyEmpty()) {
+
+        this.$alert('Required field(s)', 'Warning', {
+          confirmButtonText: 'Confirm',
+          type: 'warning'
+        });
+
+
+      } else {
+        let file_name = 'strategy' + this.radio.toString() + '_'
+        if (this.industry_value === 'ind_mas') {
+          file_name += 'Industrials & Materials_'
+        } else if (this.industry_value === 'consumer_health') {
+          file_name += 'Consumer Goods & Health Care_'
+        } else {
+          file_name += 'Finance & Technology & Utilities_'
+        }
+
+        file_name += this.volatility_value + '_' + this.price_value + '_' + this.bond_value
+
+        console.log(file_name)
+
+        this.$EventBus.$emit('getParam', file_name)
+      }
+    }
   },
   data() {
     return {
       radio: 1,
       industries: [
         {
-          value: 'materials',
-          label: 'Materials'
+          value: 'ind_mas',
+          label: 'Industrials & Materials'
         }, {
-          value: 'industrials',
-          label: 'Industrials'
-        }, {
-          value: 'consumer_discretionary',
-          label: 'Consumer Discretionary'
-        }, {
-          value: 'consumer_staples',
-          label: 'Consumer Staples'
-        }, {
-          value: 'health',
-          label: 'Health Care'
+          value: 'consumer_health',
+          label: 'Consumer Goods & Healthcare'
         }, {
           value: 'financials',
-          label: 'Financials'
-        }, {
-          value: 'information',
-          label: 'Information Technology'
-        }, {
-          value: 'communication',
-          label: 'Communication Services'
-        }, {
-          value: 'utilities',
-          label: 'Utilities'
-        }, {
-          value: 'estate',
-          label: 'Real Estate'
-        },
+          label: 'Financials & Technology & Utilities'
+        }
       ],
       industry_value: '',
       volatility: [
         {
-          value: 'high',
-          label: 'High'
+          value: 'ALL',
+          label: 'All'
         }, {
-          value: 'medium',
-          label: 'Medium'
+          value: 'Tail',
+          label: 'Tail'
         }, {
-          value: 'low',
-          label: 'Low'
-        }
+          value: 'Head',
+          label: 'Head'
+        },
       ],
       volatility_value: '',
       price: [
         {
-          value: 'high',
-          label: 'High'
+          value: 'ALL',
+          label: 'All'
         }, {
-          value: 'medium',
-          label: 'Medium'
+          value: 'Tail',
+          label: 'Tail'
         }, {
-          value: 'low',
-          label: 'Low'
-        }
+          value: 'Head',
+          label: 'Head'
+        },
+
       ],
       price_value: '',
+      bond: [
+        {
+          value: 'ALL',
+          label: 'All'
+        }, {
+          value: 'Tail',
+          label: 'Tail'
+        }, {
+          value: 'Head',
+          label: 'Head'
+        },
+
+      ],
+      bond_value: '',
     };
-  }
+  },
+
 }
+
+
 </script>
 
 <style scoped>
@@ -151,7 +205,7 @@ export default {
 }
 
 .aside_scroll .el-scrollbar__wrap {
-  overflow-x: hidden;
+  overfhead-x: hidden;
 }
 
 .side-header {
@@ -171,12 +225,13 @@ export default {
 }
 
 .factor {
-  margin: 20px;
+  margin: 18px 18px 0 18px;
 }
 
 .factor-header {
   font-size: 18px;
   font-weight: bold;
+  margin-bottom: 10px;
 }
 
 
@@ -185,19 +240,22 @@ export default {
   line-height: 23px;
   white-space: normal;
   color: black;
-  margin: 15px;
+  margin: 8px 10px;
 }
 
 .preference-content {
-  margin: 15px;
+  margin: 10px;
+  height: 55px;
 }
 
 .preference-header {
-  height: 30px;
+  height: 40px;
+  line-height: 38px;
 }
 
 .preference-content .el-select {
-  width: 250px;
+  width: 200px;
+  float: right
 }
 
 </style>

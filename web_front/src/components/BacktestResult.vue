@@ -1,39 +1,72 @@
 <template>
   <div style="padding: 30px">
+    <el-row>
+      <div class="result">
+        <div class="result-header">Result</div>
+        <el-divider style="width: 95%;"></el-divider>
 
-    <div class="result">
-      <div class="result-header">Result</div>
-      <el-divider style="width: 95%"></el-divider>
+        <el-row style="padding: 0 10px; margin-top: -8px">
+          <el-col :span="5">
+            <p class="index-header">Annualized Rate of Return</p>
+            <p class="index-value"> {{ data['res_stra'][0] }}</p>
+          </el-col>
+          <el-col :span="5">
+            <p class="index-header">Annualized Volatility</p>
+            <p class="index-value">{{ data['res_stra'][1] }}</p>
+          </el-col>
+          <el-col :span="5">
+            <p class="index-header">Annualized Sharpe Ratio</p>
+            <p class="index-value">{{ data['res_stra'][2] }}</p>
+          </el-col>
+          <el-col :span="5">
+            <p class="index-header">Max Drawdown Rate</p>
+            <p class="index-value">{{ data['res_stra'][3] }}</p>
+          </el-col>
+          <el-col :span="4">
+            <p class="index-header">Max Drawdown Duration</p>
+            <p class="index-value">{{ data['res_stra'][4] }}</p>
+          </el-col>
 
-      <el-row style="padding: 0 10px">
-        <el-col :span="4">
-          <p class="index-header">Beginning capital</p>
-          <p class="index-value">$10,000,000</p>
-        </el-col>
-        <el-col :span="3">
-          <p class="index-header">Total assets</p>
-          <p class="index-value">$10,471,259</p>
-        </el-col>
-        <el-col :span="5">
-          <p class="index-header">Accumulated profit/loss</p>
-          <p class="index-value">$471,259</p>
-        </el-col>
-        <el-col :span="3">
-          <p class="index-header">Sharp ratio</p>
-          <p class="index-value">1.5</p>
-        </el-col>
-        <el-col :span="4">
-          <p class="index-header">Annualized income</p>
-          <p class="index-value">19.33%</p>
-        </el-col>
-        <el-col :span="3">
-          <p class="index-header">Winning rate</p>
-          <p class="index-value">65%</p>
-        </el-col>
+        </el-row>
 
-      </el-row>
+
+        <el-row style="padding: 0 10px">
+          <el-col :span="5" style="margin-top: 8px">
+            <el-select v-model="option" placeholder="Please select" style="width:150px">
+              <el-option
+                v-for="item in optionList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+
+          </el-col>
+          <el-col :span="5">
+            <p class="index-header">Annualized Excess Return</p>
+            <p class="index-value">{{ data[option][0] }}</p>
+          </el-col>
+          <el-col :span="5">
+            <p class="index-header">Annualized Tracking Error</p>
+            <p class="index-value">{{ data[option][1] }}</p>
+          </el-col>
+          <el-col :span="5">
+            <p class="index-header">Max Drawdown Rate</p>
+            <p class="index-header">(relative to benchmark)</p>
+            <p class="index-value">{{ data[option][2] }}</p>
+          </el-col>
+          <el-col :span="4">
+            <p class="index-header">Win Rate</p>
+            <p class="index-value">{{ data[option][3] }}</p>
+          </el-col>
+        </el-row>
+      </div>
+
+    </el-row>
+
+    <div style="text-align: center;margin-top: -5px">
+      <img :src="url" alt="" style="margin: 0 auto;z-index: -1;" width="500"/>
     </div>
-    <img :src="url" alt="" style="margin-top: 20px"/>
   </div>
 
 </template>
@@ -44,9 +77,38 @@ export default {
   name: "BacktestResult",
   data() {
     return {
-      url: require('../assets/result.jpg'),
+      url: '',
+      option: 'stock_index',
+      optionList: [
+        {
+          value: 'stock_index',
+          label: 'Stock Index'
+        },
+        {
+          value: 'cb_index',
+          label: 'CB Index'
+        },
+        {
+          value: 'bond_index',
+          label: 'Bond Index'
+        },
+      ],
+      data: {}
     }
   },
+  methods() {
+
+  },
+  mounted() {
+    this.$EventBus.$on("getParam", (params) => {
+      this.url = require(`../assets/images/${params + '.png'}`)
+
+      this.$axios.get('../../static/json/' + params + '.json').then(res => {
+        console.log(res.data)
+        this.data = res.data
+      })
+    });
+  }
 }
 </script>
 
@@ -58,14 +120,22 @@ export default {
 }
 
 .result p {
-  margin: 10px 0;
+  margin: 4px 0;
 }
+
 .result-header {
   font-size: 20px;
   font-weight: bold;
+  margin-bottom: -8px
 }
+
 
 .index-header {
   color: #bfbfbf;
+  font-size: 14px;
+}
+
+.index-value {
+  font-size: 14px;
 }
 </style>

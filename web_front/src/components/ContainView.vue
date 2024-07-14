@@ -3,6 +3,7 @@
 
     <el-header style="text-align: left; font-size: 28px; height: 90px">
       <span class="header-bar">Backtest Laboratory</span>
+      <span class="user-heading" @click="goToDocument">Document</span>
     </el-header>
 
     <el-main>
@@ -17,6 +18,11 @@ import BacktestResult from "./BacktestResult";
 export default {
   name: "ContainView",
   components: {BacktestResult},
+  methods: {
+    goToDocument() {
+      this.$router.push({path: `/document`})
+    }
+  }
 }
 </script>
 
@@ -42,7 +48,10 @@ export default {
   font-weight: bold;
 }
 
-
-
+.user-heading {
+  float: right;
+  font-size: 18px;
+  color: #b6b6b6;
+}
 
 </style>

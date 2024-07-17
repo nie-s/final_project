@@ -8,56 +8,56 @@
         <el-row style="padding: 0 10px; margin-top: -8px">
           <el-col :span="5">
             <p class="index-header">Annualized Rate of Return</p>
-            <p class="index-value"> {{ data['res_stra'][0] }}</p>
+            <p class="index-value"> {{ (data['res_stra'][0] * 100).toFixed(2) }} %</p>
           </el-col>
           <el-col :span="5">
             <p class="index-header">Annualized Volatility</p>
-            <p class="index-value">{{ data['res_stra'][1] }}</p>
+            <p class="index-value">{{ (data['res_stra'][1] * 100).toFixed(2) }} %</p>
           </el-col>
           <el-col :span="5">
             <p class="index-header">Annualized Sharpe Ratio</p>
-            <p class="index-value">{{ data['res_stra'][2] }}</p>
+            <p class="index-value">{{ (data['res_stra'][2] * 100).toFixed(2) }} %</p>
           </el-col>
           <el-col :span="5">
             <p class="index-header">Max Drawdown Rate</p>
-            <p class="index-value">{{ data['res_stra'][3] }}</p>
+            <p class="index-value">{{ (data['res_stra'][3] * 100).toFixed(2) }} %</p>
           </el-col>
           <el-col :span="4">
             <p class="index-header">Max Drawdown Duration</p>
-            <p class="index-value">{{ data['res_stra'][4] }}</p>
+            <p class="index-value">{{ data['res_stra'][4] }} </p>
           </el-col>
 
         </el-row>
 
 
         <el-row style="padding: 0 10px">
-          <el-col :span="5" style="margin-top: 8px">
-            <el-select v-model="option" placeholder="Please select" style="width:150px">
-              <el-option
-                v-for="item in optionList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
+          <!--          <el-col :span="5" style="margin-top: 8px">-->
+          <!--            <el-select v-model="option" placeholder="Please select" style="width:150px">-->
+          <!--              <el-option-->
+          <!--                v-for="item in optionList"-->
+          <!--                :key="item.value"-->
+          <!--                :label="item.label"-->
+          <!--                :value="item.value">-->
+          <!--              </el-option>-->
+          <!--            </el-select>-->
 
-          </el-col>
+          <!--          </el-col>-->
           <el-col :span="5">
             <p class="index-header">Annualized Excess Return</p>
-            <p class="index-value">{{ data[option][0] }}</p>
+            <p class="index-value">{{ (data[option][0] * 100).toFixed(2) }} %</p>
           </el-col>
           <el-col :span="5">
             <p class="index-header">Annualized Tracking Error</p>
-            <p class="index-value">{{ data[option][1] }}</p>
+            <p class="index-value">{{ (data[option][1] * 100).toFixed(2) }} %</p>
           </el-col>
           <el-col :span="5">
             <p class="index-header">Max Drawdown Rate</p>
             <p class="index-header">(relative to benchmark)</p>
-            <p class="index-value">{{ data[option][2] }}</p>
+            <p class="index-value">{{ (data[option][2] * 100).toFixed(2) }} %</p>
           </el-col>
           <el-col :span="4">
             <p class="index-header">Win Rate</p>
-            <p class="index-value">{{ data[option][3] }}</p>
+            <p class="index-value">{{ (data[option][3] * 100).toFixed(2) }} %</p>
           </el-col>
         </el-row>
       </div>
@@ -78,7 +78,7 @@ export default {
   data() {
     return {
       url: '',
-      option: 'stock_index',
+      option: 'cb_index',
       optionList: [
         {
           value: 'stock_index',

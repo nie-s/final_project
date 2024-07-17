@@ -7,7 +7,7 @@
 
     <div class="factor">
       <div class="factor-header">Strategy</div>
-      <el-radio-group v-model="radio" text-color="#e2eeee" @change="handleClick">
+      <el-radio-group v-model="radio" text-color="#e2eeee">
         <el-radio :label="1">Linear Strategy 1</el-radio>
         <el-radio :label="2">Linear Strategy 2</el-radio>
         <el-radio :label="3">Linear Strategy 3</el-radio>
@@ -33,7 +33,7 @@
 
       <div class="preference-content">
         <span class="preference-header"> History Volatility</span>
-        <el-select v-model="volatility_value" placeholder="Please select" :disabled="radio===6">
+        <el-select v-model="volatility_value" placeholder="Please select">
           <el-option
             v-for="item in volatility"
             :key="item.value"
@@ -88,28 +88,15 @@ export default {
     handleSelect(path) {
       this.$router.push(path)
     },
-    handleClick() {
-      if (this.radio === 6) {
-        this.volatility_value = 'ALL'
-        console.log(this.volatility_value)
-      }
-    },
     anyEmpty() {
-      if (this.radio === 6) {
-        return this.industry_value === '' || this.price_value === '' || this.bond_value === ''
-      } else {
-        return this.industry_value === '' || this.volatility_value === '' || this.price_value === '' || this.bond_value === ''
-      }
+      return this.industry_value === '' || this.volatility_value === '' || this.price_value === '' || this.bond_value === ''
     },
     run() {
       if (this.anyEmpty()) {
-
         this.$alert('Required field(s)', 'Warning', {
           confirmButtonText: 'Confirm',
           type: 'warning'
         });
-
-
       } else {
         let file_name = 'strategy' + this.radio.toString() + '_'
         if (this.industry_value === 'ind_mas') {
